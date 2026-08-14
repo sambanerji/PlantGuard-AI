@@ -19,15 +19,19 @@ MODEL_PATH = os.path.join(
     "plant_model.pth"
 )
 
-# -----------------------------
-# Load trained model
-# -----------------------------
+if not os.path.exists(MODEL_PATH):
+    from huggingface_hub import hf_hub_download
+
+    MODEL_PATH = hf_hub_download(
+        repo_id="sam182004/plantguard-model",
+        filename="plant_model.pth",
+        token=os.environ.get("HF_TOKEN")
+    )
 
 checkpoint = torch.load(
     MODEL_PATH,
     map_location=device
 )
-
 classes = checkpoint["classes"]
 
 model = models.resnet50(weights=None)
